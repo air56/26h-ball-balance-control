@@ -1,0 +1,36 @@
+#include "ti_msp_dl_config.h"
+#include "delay.h"
+#include "Emm_V5.h"
+
+volatile int status = 0;
+
+#define MOTOR_ADDR              1U
+#define MOTOR_TEST_SPEED_RPM    1U
+#define MOTOR_TEST_ACCEL        1U
+#define MOTOR_TEST_RUN_MS    1000U
+#define MOTOR_TEST_STOP_MS    500U
+
+static void MotorTest_run(uint8_t direction)
+{
+    Emm_V5_Vel_Control(PC_INST, MOTOR_ADDR, direction,
+                       MOTOR_TEST_SPEED_RPM, MOTOR_TEST_ACCEL,
+                       MOTOR_SYNC_NOW);
+    delay_ms(MOTOR_TEST_RUN_MS);
+
+    Emm_V5_Stop_Now(PC_INST, MOTOR_ADDR, MOTOR_SYNC_NOW);
+    delay_ms(MOTOR_TEST_STOP_MS);
+}
+
+int main(void)
+{
+    SYSCFG_DL_init();
+
+    delay_ms(2000U);
+    Emm_V5_En_Control(PC_INST, MOTOR_ADDR, MOTOR_ENABLE, MOTOR_SYNC_NOW);
+    delay_ms(1000U);
+
+    while (1) {
+        MotorTest_run(MOTOR_DIR_CW);
+        MotorTest_run(MOTOR_DIR_CCW);
+    }
+}

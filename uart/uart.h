@@ -1,0 +1,11 @@
+#ifndef UART_H
+#define UART_H
+
+#include "ti_msp_dl_config.h"
+void UART_send_char(UART_Regs *uart, const uint8_t data);
+void UART_send_string(UART_Regs *uart, const char *str);
+void UART_send_bytes(UART_Regs *uart, const uint8_t *data, uint16_t len);
+void UART_debug_dump(UART_Regs *debug_uart, const uint8_t *data, uint16_t len);
+
+#endif
+
